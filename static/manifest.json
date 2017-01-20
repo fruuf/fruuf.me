@@ -1,0 +1,6 @@
+{
+  "short_name": "fruuf",
+  "name": "fruuf.me",
+  "start_url": "/",
+  "display": "standalone"
+}

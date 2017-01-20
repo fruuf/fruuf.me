@@ -1,0 +1,29 @@
+{
+  "scripts": {
+    "start": "node build/bundle.js",
+    "client": "pack -ws client",
+    "server": "rimraf build && pack -ws server -d build",
+    "test": "eslint client server && pack -ts client && pack -ts server",
+    "build": "rimraf dist && pack -s server && pack -s client",
+    "deploy": "ansible-playbook -i ansible/hosts ansible/deploy.yml"
+  },
+  "dependencies": {
+    "babel-runtime": "^6.22.0",
+    "express": "^4.14.0"
+  },
+  "devDependencies": {
+    "babel-eslint": "^7.1.1",
+    "classnames": "^2.2.5",
+    "eslint": "^3.13.1",
+    "eslint-config-airbnb": "^14.0.0",
+    "eslint-plugin-import": "^2.2.0",
+    "eslint-plugin-jsx-a11y": "^3.0.2",
+    "eslint-plugin-react": "^6.9.0",
+    "inobounce": "^0.1.4",
+    "normalize.css": "^5.0.0",
+    "pack-cli": "^1.3.12",
+    "react": "^15.4.2",
+    "react-enroute": "^1.0.0",
+    "rimraf": "^2.5.4"
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "react": true,
+  "lite": true,
+  "cssmodules": true,
+  "src": "client",
+  "dist": "dist/assets",
+  "env": "../env.json",
+  "proxy": 3000
+}

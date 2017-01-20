@@ -1,0 +1,25 @@
+{
+  "parser": "babel-eslint",
+  "extends": "airbnb",
+  "env": {
+    "mocha": true,
+    "browser": true,
+    "node": true
+  },
+  "parserOptions": {
+    "ecmaVersion": 8
+  },
+  "rules": {
+    "import/no-unresolved": 0,
+    "import/no-absolute-path": 0,
+    "import/no-extraneous-dependencies": 0,
+    "react/jsx-filename-extension": 0,
+    "import/extensions": 0,
+    "global-require": 0
+  },
+  "globals": {
+    "expect": true,
+    "process": true,
+    "mount": true
+  }
+}

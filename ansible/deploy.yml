@@ -1,0 +1,94 @@
+---
+- name: Deploy to server
+  hosts: all
+  gather_facts: yes
+  tasks:
+    - name: test app local
+      local_action:
+        module: command
+        args: npm run test
+
+    - name: build app local
+      local_action:
+        module: command
+        args: npm run build
+
+    - name: create app folder
+      become: yes
+      file:
+        path: /home/fruuf/app
+        owner: fruuf
+        group: fruuf
+        mode: 0755
+        state: directory
+
+    - name: create assets folder
+      become: yes
+      file:
+        path: /var/www/html/assets
+        owner: www-data
+        group: www-data
+        mode: 0755
+        state: directory
+
+    - name: create static folder
+      become: yes
+      file:
+        path: /var/www/html/static
+        owner: www-data
+        group: www-data
+        mode: 0755
+        state: directory
+
+    - name: synchronize app
+      become: yes
+      synchronize:
+        src: ../dist/server
+        dest: /home/fruuf/app
+        rsync_path: sudo -u fruuf rsync
+        rsync_opts:
+          - --exclude .DS_Store
+
+    - name: copy package.json
+      become: yes
+      copy:
+        src: ../package.json
+        owner: fruuf
+        group: fruuf
+        dest: /home/fruuf/app
+
+    - name: copy yarn.lock
+      become: yes
+      copy:
+        src: ../yarn.lock
+        owner: fruuf
+        group: fruuf
+        dest: /home/fruuf/app
+
+    - name: synchronize static files
+      become: yes
+      synchronize:
+        src: ../static
+        dest: /var/www/html
+        rsync_path: sudo -u www-data rsync
+        rsync_opts:
+          - --exclude .DS_Store
+
+    - name: synchronize assets
+      become: yes
+      synchronize:
+        src: ../dist/assets
+        dest: /var/www/html
+        rsync_path: sudo -u www-data rsync
+        rsync_opts:
+          - --exclude .DS_Store
+
+    - name: running yarn install
+      shell: yarn install --production
+      args:
+        chdir: /home/fruuf/app
+
+    - name: restart pm2
+      shell: pm2 restart bundle
+      args:
+        chdir: /home/fruuf/app
