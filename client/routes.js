@@ -1,16 +1,8 @@
-import React, { PropTypes } from 'react';
-import { Router, Route } from 'react-enroute';
-import Dashboard from '/components/Dashboard';
+import React from 'react';
+import { Router, Route } from 'react-enroute'; // way smaller than react router
+import Dashboard from '/components/Dashboard'; // absolute import gets resolved in client
+import NotFound from '/components/NotFound';
 
-const NotFound = props => (
-  <div>
-    <h1>{`location "${props.location}" not found in "${process.env.GIT_COMMIT_HASH}"`}</h1>
-  </div>
-);
-
-NotFound.propTypes = {
-  location: PropTypes.string.isRequired,
-};
 
 export default () => (
   <Router location={window.location.pathname}>
