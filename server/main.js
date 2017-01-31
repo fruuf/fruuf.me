@@ -31,6 +31,9 @@ if (process.env.NODE_ENV === 'development') {
   });
 }
 
+// mount the api
+app.use('/api', api);
+
 // its a single page app, serve all requests with the entry html
 app.get('*', (req, res) => {
   // pack includes pug/jade templates as a function of templateVars -> html
@@ -39,13 +42,3 @@ app.get('*', (req, res) => {
 
 // nginx proxies non-static requests to port 3000
 app.listen(3000);
-
-// allow hot-reloading of the API in development mode
-let cleanup = api(app);
-if (module.hot) {
-  module.hot.accept('./api', () => {
-    cleanup();
-    const newApi = require('./api').default;
-    cleanup = newApi(app);
-  });
-}
