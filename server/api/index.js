@@ -1,15 +1,31 @@
-import { Router } from 'express';
-import schema from './schema';
+import initDB from './db';
+import initStore from './store';
+import initSocket from './socket';
+import initRouter from './router';
 
-const api = Router({});
+const initialiseFns = [initDB, initStore, initSocket, initRouter];
 
-let schemaRoute = schema;
-api.get('/graphql', (...args) => schemaRoute(...args));
-if (module.hot) {
-  module.hot.accept('./schema', () => {
-    schemaRoute = require('./schema').default;
-  });
-}
+let api = false;
 
+const deferredApiCallbacks = [];
 
-export default api;
+export const init = async ({ app, io }) => {
+  let apiProps = { app, io };
+  let i = 0;
+  while (i < initialiseFns.length) {
+    // eslint-disable-next-line no-await-in-loop
+    const newApiProps = await initialiseFns[i](apiProps);
+    apiProps = {
+      ...apiProps,
+      ...newApiProps,
+    };
+    i += 1;
+  }
+  api = apiProps;
+  deferredApiCallbacks.forEach(fn => fn(apiProps));
+};
+
+export default () => {
+  if (api) return Promise.resolve(api);
+  return new Promise(resolve => deferredApiCallbacks.push(resolve));
+};

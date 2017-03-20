@@ -1,6 +1,5 @@
 {
   "react": true,
-  "lite": true,
   "cssmodules": true,
   "src": "client",
   "dist": "dist/assets",

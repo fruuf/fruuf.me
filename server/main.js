@@ -1,13 +1,16 @@
 import express from 'express';
 import path from 'path';
+import { Server } from 'http';
+import socketIo from 'socket.io';
 import index from './index.pug';
-import api from './api';
-
+import getApi, { init } from './api';
 
 const app = express();
+const http = Server(app);
+const io = socketIo(http);
 
 // use git commit hash for cache busting
-const hash = (process.env.GIT_COMMIT_HASH).substr(0, 8);
+const hash = process.env.GIT_COMMIT_HASH.substr(0, 8);
 let bundleSrc = {
   bundleJs: `/assets/js/bundle.${hash}.js`,
   bundleCss: `/assets/css/bundle.${hash}.css`,
@@ -31,14 +34,19 @@ if (process.env.NODE_ENV === 'development') {
   });
 }
 
-// mount the api
-app.use('/api', api);
-
 // its a single page app, serve all requests with the entry html
 app.get('*', (req, res) => {
   // pack includes pug/jade templates as a function of templateVars -> html
-  res.send(index(bundleSrc));
+  res.send(index({ ...bundleSrc }));
 });
 
 // nginx proxies non-static requests to port 3000
-app.listen(3000);
+http.listen(3000, () => {
+  init({ io, app });
+});
+
+getApi().then((api) => {
+  api.queryState('tables').subscribe((tables) => {
+    console.log(tables.toJS());
+  });
+});

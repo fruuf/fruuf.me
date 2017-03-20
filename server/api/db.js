@@ -1,22 +1,27 @@
-import Sequelize from 'sequelize';
 import path from 'path';
+import initKnex from 'knex';
+import fs from 'fs';
 
-const storage = path.join(process.cwd(), 'db.sqlite');
+export default async () => {
+  const dbFilename = path.join(process.cwd(), 'db.sqlite');
 
-const sequelize = new Sequelize({
-  dialect: 'sqlite',
-  storage,
-});
+  const db = initKnex({
+    client: 'sqlite3',
+    connection: {
+      filename: dbFilename,
+    },
+  });
 
-export const project = sequelize.define('project', {
-  title: Sequelize.STRING,
-  description: Sequelize.TEXT,
-});
-
-export const task = sequelize.define('task', {
-  title: Sequelize.STRING,
-  description: Sequelize.TEXT,
-  deadline: Sequelize.DATE,
-});
-
-export const db = sequelize.sync({ force: true }).then(() => sequelize);
+  try {
+    fs.statSync(dbFilename);
+  } catch (e) {
+    await db.schema.createTable('eventStream', (table) => {
+      table.increments();
+      table.string('type');
+      table.string('source');
+      table.json('data');
+      table.dateTime('createdAt').defaultTo(db.fn.now());
+    });
+  }
+  return { db };
+};
