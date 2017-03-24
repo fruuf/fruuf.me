@@ -1,8 +1,9 @@
+import { cacheFactory } from '/util';
 import path from 'path';
 import initKnex from 'knex';
 import fs from 'fs';
 
-export default async () => {
+export default cacheFactory(async () => {
   const dbFilename = path.join(process.cwd(), 'db.sqlite');
 
   const db = initKnex({
@@ -23,5 +24,5 @@ export default async () => {
       table.dateTime('createdAt').defaultTo(db.fn.now());
     });
   }
-  return { db };
-};
+  return db;
+});

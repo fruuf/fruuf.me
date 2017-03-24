@@ -1,9 +1,12 @@
-import { Observable, ReplaySubject } from 'rxjs';
+import { ReplaySubject } from 'rxjs';
 import { createStore, applyMiddleware, compose } from 'redux';
 import thunk from 'redux-thunk';
 import ducks from '/ducks';
+import { cacheObservable, debugTagStream, cacheFactory } from '/util';
+import dbFactory from './db';
 
-export default async ({ db }) => {
+export default cacheFactory(async () => {
+  const db = await dbFactory();
   const persistentEventMiddleware = () =>
     next =>
       async (action) => {
@@ -34,53 +37,13 @@ export default async ({ db }) => {
 
   // query redux store
   const stateSubject = new ReplaySubject(1);
-  const cacheMap = new Map();
 
-  const cacheAdd = (sourceStream, part, stream) => {
-    if (!cacheMap.has(sourceStream)) {
-      cacheMap.set(sourceStream, new Map());
-    }
-    const partMap = cacheMap.get(sourceStream);
-    partMap.set(part, stream);
-    return true;
-  };
+  debugTagStream(stateSubject, 'reduxState');
 
-  const cacheRemove = (sourceStream, part) => {
-    const partMap = cacheMap.get(sourceStream);
-    partMap.delete(part);
-    if (partMap.size === 0) {
-      cacheMap.delete(sourceStream);
-    }
-    return true;
-  };
+  const quertPartFn = (sourceStream, arg) =>
+    sourceStream.map(item => item.get(arg)).distinctUntilChanged();
 
-  const cacheHas = (sourceStream, part) =>
-    cacheMap.has(sourceStream) && cacheMap.get(sourceStream).has(part);
-
-  const cacheGet = (sourceStream, part) => cacheMap.get(sourceStream).get(part);
-
-  const queryPart = (sourceStream, part) => {
-    if (cacheHas(sourceStream, part)) {
-      return cacheGet(sourceStream, part);
-    }
-    let references = 0;
-    const stream = sourceStream.map(data => data.get(part)).distinctUntilChanged().publishReplay(1);
-    const connection = stream.connect();
-    const resultStream = Observable.create((observer) => {
-      references += 1;
-      const subscription = stream.subscribe(observer);
-      return () => {
-        references -= 1;
-        subscription.unsubscribe();
-        if (references === 0) {
-          connection.unsubscribe();
-          cacheRemove(sourceStream, part);
-        }
-      };
-    });
-    cacheAdd(sourceStream, part, resultStream);
-    return resultStream;
-  };
+  const queryPart = cacheObservable(quertPartFn, 1);
 
   const queryState = (...parts) => parts.reduce((acc, cur) => queryPart(acc, cur), stateSubject);
 
@@ -91,4 +54,4 @@ export default async ({ db }) => {
   const dispatch = store.dispatch.bind(store);
 
   return { queryState, dispatch };
-};
+});

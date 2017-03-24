@@ -1,10 +1,10 @@
 import { cacheFactory } from '/util';
-import { Router } from 'express';
+import { Server } from 'http';
 import appFactory from './app';
 
 export default cacheFactory(async () => {
   const app = await appFactory();
-  const router = Router({});
-  app.use('/api', router);
-  return router;
+  const http = Server(app);
+  http.listen(3000);
+  return http;
 });
