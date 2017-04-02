@@ -1,4 +1,4 @@
-import { cacheFactory } from '/util';
+import { cacheFactory } from '/cache';
 import { Router } from 'express';
 import appFactory from './app';
 

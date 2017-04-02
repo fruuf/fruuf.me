@@ -1,4 +1,4 @@
-import { cacheFactory } from '/util';
+import { cacheFactory } from '/cache';
 import { Server } from 'http';
 import appFactory from './app';
 

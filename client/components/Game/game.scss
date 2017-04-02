@@ -1,0 +1,168 @@
+$green: #4E937A;
+$red: #E84855;
+$yellow: #E06D06;
+$blue: #4281A4;
+$black:#121619;
+$background: #E6E8E6;
+$white: white;
+
+$size: 100vw / 11;
+.game {
+  height: 90vh;
+  width: 100vw;
+  position: relative;
+  display: flex;
+  flex-flow: column nowrap;
+  .current-payout {
+    position: absolute;
+    left: 0;
+    top:0;
+    color: $blue;
+    font-size: 60px;
+    font-weight: bold;
+    line-height: 80px;
+  }
+  .balance {
+    position: absolute;
+    right: 0;
+    top:0;
+    color: $blue;
+    font-size: 40px;
+    line-height: 50px;
+  }
+  .average-payout {
+    position: absolute;
+    right: 0;
+    top:50px;
+    color: $black;
+    font-size: 20px;
+    line-height: 30px;
+  }
+  .field {
+    overflow: hidden;
+    padding: 20px 0;
+    flex: 1 1 0px;
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: space-around;
+    background-color: $background;
+  }
+  .control {
+    flex: 0 0 160px;
+    display: flex;
+    flex-flow: column nowrap;
+    cursor: pointer;
+    .control-game {
+      flex: 0 0 100px;
+      .button-game {
+        cursor: pointer;
+        height: 100px;
+        line-height: 100px;
+        font-size: 30px;
+        font-weight: bold;
+        text-align: center;
+        &-start {
+          background-color: $green;
+          font-weight: bold;
+          color: $white;
+          &-disabled {
+            opacity: 0.7;
+          }
+        }
+        &-stop {
+          background-color: $red;
+          color: $black;
+        }
+
+      }
+
+    }
+    .control-risk {
+      display: flex;
+      flex-flow: row nowrap;
+      flex: 0 0 30px;
+      .button {
+        flex: 1 0 0px;
+        line-height: 30px;
+        height: 30px;
+        text-align: center;
+        cursor: pointer;
+        &-active {
+          font-weight: bold;
+          background-color: $green;
+          color: $white;
+        }
+      }
+    }
+    .options {
+      flex: 0 0 30px;
+      display: flex;
+      flex-flow: row nowrap;
+      justify-content: space-around;
+      .option {
+        line-height: 30px;
+        font-size: 12px;
+        flex: 1 0 0px;
+        display: flex;
+        flex-flow: row nowrap;
+        justify-content: center;
+        .option-label {
+          padding: 0 10px 0 0;
+        }
+        &-active {
+          font-weight: bold;
+          background-color: $green;
+          color: $white;
+        }
+      }
+    }
+  }
+}
+
+.button {
+  flex: 1 1 0px;
+}
+
+.control-game {
+  height: 100px;
+
+}
+
+.row {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  justify-content: center;
+}
+.payout {
+  font-size: $size / 3;
+  height: $size;
+  width: $size;
+  border-radius: $size / 2;
+  border: solid 1px #ccc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  box-sizing: content-box;
+  background-color: $white;
+}
+.payout-active.payout-low {
+    background-color: $red;
+  }
+.payout-active.payout-medium {
+    background-color: $yellow;
+  }
+.payout-active.payout-high {
+    background-color: $green;
+  }
+
+.payout-low {
+  border-color: $red;
+}
+.payout-medium {
+  border-color: $yellow;
+}
+.payout-high {
+  border-color: $green;
+}

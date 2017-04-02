@@ -1,4 +1,4 @@
-import { cacheFactory } from '/util';
+import { cacheFactory } from '/cache';
 import express from 'express';
 import path from 'path';
 import index from '/view.pug';

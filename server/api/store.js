@@ -2,7 +2,7 @@ import { ReplaySubject } from 'rxjs';
 import { createStore, applyMiddleware, compose } from 'redux';
 import thunk from 'redux-thunk';
 import ducks from '/ducks';
-import { cacheObservable, debugTagStream, cacheFactory } from '/util';
+import { cacheObservable, cacheFactory } from '/cache';
 import dbFactory from './db';
 
 export default cacheFactory(async () => {
@@ -37,8 +37,6 @@ export default cacheFactory(async () => {
 
   // query redux store
   const stateSubject = new ReplaySubject(1);
-
-  debugTagStream(stateSubject, 'reduxState');
 
   const quertPartFn = (sourceStream, arg) =>
     sourceStream.map(item => item.get(arg)).distinctUntilChanged();

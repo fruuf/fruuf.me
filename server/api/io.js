@@ -1,4 +1,4 @@
-import { cacheFactory } from '/util';
+import { cacheFactory } from '/cache';
 import socketIo from 'socket.io';
 import httpFactory from './http';
 

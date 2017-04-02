@@ -1,4 +1,4 @@
-import { cacheFactory } from '/util';
+import { cacheFactory } from '/cache';
 import path from 'path';
 import initKnex from 'knex';
 import fs from 'fs';

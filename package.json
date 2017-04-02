@@ -2,7 +2,7 @@
   "scripts": {
     "client": "pack -ws client",
     "server": "rimraf build && pack -ws server -d build",
-    "test": "eslint client server && pack -ts client && pack -ts server",
+    "test": "pack -ts client && pack -ts server",
     "build": "rimraf dist && pack -s server && pack -s client",
     "deploy": "ansible-playbook -i ansible/hosts ansible/deploy.yml"
   },
@@ -10,24 +10,14 @@
     "babel-runtime": "^6.22.0",
     "chai": "^3.5.0",
     "express": "^4.14.0",
-    "graphql": "^0.9.1",
-    "graphql-relay": "^0.5.1",
-    "immutable": "^4.0.0-rc.1",
-    "immutablediff": "^0.4.4",
-    "immutablepatch": "^0.4.1",
-    "join-monster": "^1.0.1-beta.1",
-    "knex": "^0.12.7",
+    "lodash": "^4.17.4",
     "recompose": "^0.22.0",
-    "redux": "^3.6.0",
-    "redux-immutable": "^3.1.0",
-    "redux-thunk": "^2.2.0",
     "rxjs": "^5.0.3",
     "socket.io": "^1.7.3",
-    "socket.io-client": "^1.7.3",
-    "sqlite3": "^3.1.8"
+    "socket.io-client": "^1.7.3"
   },
   "devDependencies": {
-    "babel-eslint": "^7.1.1",
+    "babel-eslint": "^7.2.1",
     "classnames": "^2.2.5",
     "eslint": "^3.13.1",
     "eslint-config-airbnb": "^14.0.0",
@@ -40,6 +30,7 @@
     "react": "^15.4.2",
     "react-redux": "^5.0.2",
     "react-router": "^3.0.2",
-    "rimraf": "^2.5.4"
+    "rimraf": "^2.5.4",
+    "sinon": "^2.1.0"
   }
 }
